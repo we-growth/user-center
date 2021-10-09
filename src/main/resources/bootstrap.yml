@@ -3,8 +3,8 @@ spring:
     name: user-center
   cloud:
     consul:
-      host: 127.0.0.1
-      port: 8500
+      host: @consul.host@
+      port: @consul.port@
       discovery:
         service-name: user-center
         # 启用服务发现

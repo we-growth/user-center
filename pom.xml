@@ -100,6 +100,12 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+         <!-- swagger for rest documentation-->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.5.11</version>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -123,7 +129,7 @@
                 <logback.loglevel>DEBUG</logback.loglevel>
                 <!-- default Spring profiles -->
                 <spring.profiles.active>dev</spring.profiles.active>
-                <consul.host>192.168.1.164</consul.host>
+                <consul.host>127.0.0.1</consul.host>
                 <consul.port>8500</consul.port>
             </properties>
             <dependencies>
