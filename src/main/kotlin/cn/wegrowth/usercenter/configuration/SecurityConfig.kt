@@ -1,4 +1,4 @@
-package cn.wegrowth.usercenter.configuration.security
+package cn.wegrowth.usercenter.configuration
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -6,12 +6,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 
 @EnableWebSecurity
-class SecurityConfig: WebSecurityConfigurerAdapter() {
+class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Value("\${springdoc.api-docs.path}")
     private lateinit var restApiDocPath: String
 
     @Value("\${springdoc.swagger-ui.path}")
-    private lateinit var swaggerPath:String
+    private lateinit var swaggerPath: String
 
     override fun configure(http: HttpSecurity) {
         // set permissions on endpoints

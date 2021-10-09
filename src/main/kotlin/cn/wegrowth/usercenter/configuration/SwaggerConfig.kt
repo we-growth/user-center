@@ -1,6 +1,5 @@
 package cn.wegrowth.usercenter.configuration
 
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType
 import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
@@ -26,16 +25,18 @@ class SwaggerConfig {
         return OpenAPI()
             .addSecurityItem(SecurityRequirement().addList(securitySchemeName))
             .components(
-                Components().addSecuritySchemes(securitySchemeName,
+                Components().addSecuritySchemes(
+                    securitySchemeName,
                     SecurityScheme().name(securitySchemeName)
                         .type(SecurityScheme.Type.HTTP)
                         .scheme("bearer")
                 )
             )
-            .info(Info()
-                .title("User Center Rest Api")
-                .description("Rest Api for User-center.")
-                .version("1.0")
+            .info(
+                Info()
+                    .title("User Center Rest Api")
+                    .description("Rest Api for User-center.")
+                    .version("1.0")
             )
     }
 
