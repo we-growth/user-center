@@ -1,13 +1,18 @@
 package cn.wegrowth.usercenter.configuration
 
-import cn.wegrowth.usercenter.auth.usernamepassword.UsernamePasswordAuthenticationProvider
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.core.userdetails.User
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.provisioning.InMemoryUserDetailsManager
+
 
 @EnableWebSecurity
 @Configuration
@@ -18,23 +23,40 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Value("\${springdoc.swagger-ui.path}")
     private lateinit var swaggerPath: String
 
-    override fun configure(auth: AuthenticationManagerBuilder) {
-        auth.authenticationProvider(usernamePasswordAuthenticationProvider())
+    @Bean
+    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
+
+//    @Bean
+//    fun usernamePasswordAuthenticationProvider(): UsernamePasswordAuthenticationProvider =
+//        UsernamePasswordAuthenticationProvider()
+
+    @Bean
+    override fun authenticationManager(): AuthenticationManager {
+        return super.authenticationManager()
     }
+
+    //    override fun configure(auth: AuthenticationManagerBuilder) {
+//        auth.authenticationProvider(usernamePasswordAuthenticationProvider())
+//    }
     override fun configure(http: HttpSecurity) {
-//        http.formLogin().permitAll()
         // set permissions on endpoints
+//        .requestMatchers(EndpointRequest.to("health", "info", "metrics", "prometheus")).permitAll()
         http.authorizeRequests()
             .antMatchers("/oauth/token").permitAll()
             .antMatchers("/").permitAll()
             .antMatchers("%s/**".format(restApiDocPath)).permitAll()
             .antMatchers("%s/**".format(swaggerPath)).permitAll()
-            .anyRequest().authenticated()
-
+            .anyRequest().permitAll()
     }
+
     @Bean
-    fun usernamePasswordAuthenticationProvider() : UsernamePasswordAuthenticationProvider {
-        return UsernamePasswordAuthenticationProvider()
+    override fun userDetailsService(): UserDetailsService {
+        return InMemoryUserDetailsManager(
+            User.withUsername("user")
+                .password(passwordEncoder().encode("password"))
+                .roles("USER")
+                .build()
+        )
     }
 
 }

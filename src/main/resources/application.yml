@@ -8,11 +8,11 @@ springdoc:
     path: /swagger-ui
 
 
-security:
-  oauth2:
-    client:
-      client-id: first-client
-      client-secret: noonewilleverguess
+#security:
+#  oauth2:
+#    client:
+#      client-id: first-client
+#      client-secret: noonewilleverguess
 
 logging:
   level:
