@@ -3,6 +3,7 @@ package cn.wegrowth.usercenter.domain.service
 import cn.wegrowth.usercenter.domain.user.QUser
 import cn.wegrowth.usercenter.repository.UserRepository
 import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 
 
@@ -17,8 +18,9 @@ class JpaPlatformUserDetailManager(private val userRepository: UserRepository) :
 
 
     override fun loadUserByUsername(username: String?): UserDetails {
-//        TODO("Not yet implemented")
-        return userRepository.findOne(QUser.user.username.eq(username)).get()
+        return userRepository.findOne(
+            QUser.user.username.eq(username)
+        ).orElseThrow { UsernameNotFoundException("User not Found") }
     }
 
 
