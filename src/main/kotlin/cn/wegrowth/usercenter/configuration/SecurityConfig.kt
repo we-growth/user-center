@@ -26,23 +26,14 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
-//    @Bean
-//    fun usernamePasswordAuthenticationProvider(): UsernamePasswordAuthenticationProvider =
-//        UsernamePasswordAuthenticationProvider()
-
     @Bean
     override fun authenticationManager(): AuthenticationManager {
         return super.authenticationManager()
     }
 
-    //    override fun configure(auth: AuthenticationManagerBuilder) {
-//        auth.authenticationProvider(usernamePasswordAuthenticationProvider())
-//    }
     override fun configure(http: HttpSecurity) {
-        // set permissions on endpoints
-//        .requestMatchers(EndpointRequest.to("health", "info", "metrics", "prometheus")).permitAll()
+
         http.authorizeRequests()
-            .antMatchers("/oauth/token").permitAll()
             .antMatchers("/").permitAll()
             .antMatchers("%s/**".format(restApiDocPath)).permitAll()
             .antMatchers("%s/**".format(swaggerPath)).permitAll()
