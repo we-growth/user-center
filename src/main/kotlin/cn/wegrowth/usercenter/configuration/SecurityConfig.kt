@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.core.userdetails.User
@@ -29,6 +30,11 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Bean
     override fun authenticationManager(): AuthenticationManager {
         return super.authenticationManager()
+    }
+
+    override fun configure(web: WebSecurity) {
+       web.ignoring()
+           .antMatchers("%s/**".format("/h2"))
     }
 
     override fun configure(http: HttpSecurity) {
