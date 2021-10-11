@@ -31,17 +31,13 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
         return super.authenticationManager()
     }
 
-    override fun configure(web: WebSecurity) {
-        web.ignoring()
-            .antMatchers("%s/**".format("/h2"))
-    }
-
     override fun configure(http: HttpSecurity) {
 
         http.authorizeRequests()
             .antMatchers("/").permitAll()
             .antMatchers("%s/**".format(restApiDocPath)).permitAll()
             .antMatchers("%s/**".format(swaggerPath)).permitAll()
+            .antMatchers("%s/**".format("/actuator")).permitAll()
             .anyRequest().authenticated()
     }
 

@@ -11,8 +11,8 @@ class ResourceServerConfig : ResourceServerConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
        http.anonymous().disable()
-           .requestMatchers().antMatchers("/api/**")
-           .and().authorizeRequests()
+//           .requestMatchers().antMatchers("/api/**")
+           .authorizeRequests()
            .antMatchers("/api/**").authenticated()
     }
 }
