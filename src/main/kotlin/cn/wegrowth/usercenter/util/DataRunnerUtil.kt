@@ -11,7 +11,7 @@ class DataRunnerUtil(private val userRepository: UserRepository) : CommandLineRu
     override fun run(vararg args: String?) {
         userRepository.run {
             deleteAll()
-            save(User(username = "admin",password = BCryptPasswordEncoder().encode("admin")))
+            save(User(username = "admin", password = BCryptPasswordEncoder().encode("admin")))
         }
     }
 }
