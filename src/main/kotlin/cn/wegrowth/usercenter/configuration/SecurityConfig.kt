@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -12,8 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 
 
-@EnableWebSecurity
 @Configuration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Value("\${springdoc.api-docs.path}")
     private lateinit var restApiDocPath: String
@@ -40,17 +42,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
             .antMatchers("/").permitAll()
             .antMatchers("%s/**".format(restApiDocPath)).permitAll()
             .antMatchers("%s/**".format(swaggerPath)).permitAll()
-            .anyRequest().permitAll()
+            .anyRequest().authenticated()
     }
-
-//    @Bean
-//    override fun userDetailsService(): UserDetailsService {
-//        return InMemoryUserDetailsManager(
-//            User.withUsername("user")
-//                .password(passwordEncoder().encode("password"))
-//                .roles("USER")
-//                .build()
-//        )
-//    }
 
 }

@@ -28,10 +28,11 @@ class AuthorizationConfiguration(
     }
 
     override fun configure(endpoints: AuthorizationServerEndpointsConfigurer) {
-        endpoints.reuseRefreshTokens(true)
-        endpoints.authenticationManager(authenticationManager)
-        //for refresh_token.
-        endpoints.userDetailsService(userDetailsService)
+        endpoints
+            .reuseRefreshTokens(true)
+            .authenticationManager(authenticationManager)
+            //for refresh_token.
+            .userDetailsService(userDetailsService)
     }
 
     override fun configure(clients: ClientDetailsServiceConfigurer) {
