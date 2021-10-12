@@ -12,6 +12,11 @@ logging:
 #    org.springframework.security: TRACE
 
 spring:
+  redis:
+    host: 127.0.0.1
+    password: password
+    port : 6379
+
   datasource:
     url: jdbc:postgresql://localhost:5432/user-center?useSSL=false
     username: postgres

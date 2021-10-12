@@ -13,6 +13,7 @@ class FooApi {
     fun getFoo(hello: String): String {
         return hello + DateTime.now()
     }
+
     @GetMapping("foo2")
     @PreAuthorize("hasRole('foo')")
     fun getUserFoo(hello: String): String {
