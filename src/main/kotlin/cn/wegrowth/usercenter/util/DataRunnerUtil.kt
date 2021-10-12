@@ -3,7 +3,7 @@ package cn.wegrowth.usercenter.util
 import cn.wegrowth.usercenter.domain.user.User
 import cn.wegrowth.usercenter.repository.UserRepository
 import org.springframework.boot.CommandLineRunner
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
 import org.springframework.stereotype.Component
 
 @Component
@@ -11,7 +11,7 @@ class DataRunnerUtil(private val userRepository: UserRepository) : CommandLineRu
     override fun run(vararg args: String?) {
         userRepository.run {
             deleteAll()
-            save(User(username = "admin", password = BCryptPasswordEncoder().encode("admin")))
+            save(User(username = "admin", password = Argon2PasswordEncoder().encode("admin")))
         }
     }
 }
