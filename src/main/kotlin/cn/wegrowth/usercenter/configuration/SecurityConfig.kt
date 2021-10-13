@@ -49,17 +49,27 @@ class SecurityConfig(private val userDetailsService: UserDetailsService) : WebSe
             .anyRequest().authenticated()
     }
 
-    override fun configure(auth: AuthenticationManagerBuilder) {
-        val smsCodeAuthenticationProvider = SmsCodeAuthenticationProvider()
-        smsCodeAuthenticationProvider.userServiceDetail = userDetailsService
-        auth.authenticationProvider(smsCodeAuthenticationProvider)
-
-        val daoAuthenticationProvider = DaoAuthenticationProvider().run {
+    // add AuthenticationProvider
+    @Bean
+    fun daoAuthenticationProvier(): DaoAuthenticationProvider {
+        return DaoAuthenticationProvider().run {
             setUserDetailsService(userDetailsService)
             setPasswordEncoder(passwordEncoder())
             this
         }
-        auth.authenticationProvider(daoAuthenticationProvider)
     }
+
+    @Bean
+    fun smsCodeAuthenticationProvier(): SmsCodeAuthenticationProvider {
+        return SmsCodeAuthenticationProvider(userDetailsService)
+    }
+
+    override fun configure(auth: AuthenticationManagerBuilder?) {
+        auth?.let {
+            it.authenticationProvider(smsCodeAuthenticationProvier())
+            it.authenticationProvider(daoAuthenticationProvier())
+        }
+    }
+
 
 }

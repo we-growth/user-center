@@ -4,12 +4,14 @@ import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetailsService
 
-class SmsCodeAuthenticationProvider : AuthenticationProvider {
-    lateinit var userServiceDetail: UserDetailsService
+class SmsCodeAuthenticationProvider(
+    private val userDetailsService: UserDetailsService
+) : AuthenticationProvider {
+
 
     override fun authenticate(authentication: Authentication): Authentication {
         val authenticationToken: SmsCodeAuthenticationToken = authentication as SmsCodeAuthenticationToken
-        val userDetail = userServiceDetail.loadUserByUsername(authenticationToken.principal.toString())
+        val userDetail = userDetailsService.loadUserByUsername(authenticationToken.principal.toString())
 
         val authenticationResult = SmsCodeAuthenticationToken(
             authenticationToken.principal, authenticationToken.credentials,
