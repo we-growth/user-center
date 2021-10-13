@@ -14,20 +14,18 @@ class SmsCodeAuthenticationToken : AbstractAuthenticationToken {
     ) : super(authorities) {
         this.principal = principal
         this.credentials = credentials
-        super.setAuthenticated(true)
     }
 
     constructor(principal: String, credentials: String) : super(null) {
         this.principal = principal
         this.credentials = credentials
-        super.setAuthenticated(false)
     }
 
     override fun getCredentials(): Any? {
         return this.credentials
     }
 
-    override fun getPrincipal(): Any? {
-        return this.credentials
+    override fun getPrincipal(): String {
+        return this.credentials!!.toString()
     }
 }

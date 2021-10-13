@@ -1,6 +1,7 @@
 package cn.wegrowth.usercenter.configuration
 
 import cn.wegrowth.usercenter.auth.sms.SmsCodeAuthenticationProvider
+import cn.wegrowth.usercenter.auth.wechat.WechatAuthenticationProvider
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -51,7 +52,7 @@ class SecurityConfig(private val userDetailsService: UserDetailsService) : WebSe
 
     // add AuthenticationProvider
     @Bean
-    fun daoAuthenticationProvier(): DaoAuthenticationProvider {
+    fun daoAuthenticationProvider(): DaoAuthenticationProvider {
         return DaoAuthenticationProvider().run {
             setUserDetailsService(userDetailsService)
             setPasswordEncoder(passwordEncoder())
@@ -60,14 +61,20 @@ class SecurityConfig(private val userDetailsService: UserDetailsService) : WebSe
     }
 
     @Bean
-    fun smsCodeAuthenticationProvier(): SmsCodeAuthenticationProvider {
+    fun smsCodeAuthenticationProvider(): SmsCodeAuthenticationProvider {
         return SmsCodeAuthenticationProvider(userDetailsService)
     }
 
-    override fun configure(auth: AuthenticationManagerBuilder?) {
-        auth?.let {
-            it.authenticationProvider(smsCodeAuthenticationProvier())
-            it.authenticationProvider(daoAuthenticationProvier())
+    @Bean
+    fun wechatAuthenticationProvider(): WechatAuthenticationProvider {
+        return WechatAuthenticationProvider(userDetailsService)
+    }
+
+    override fun configure(auth: AuthenticationManagerBuilder) {
+        auth.let {
+            it.authenticationProvider(smsCodeAuthenticationProvider())
+            it.authenticationProvider(daoAuthenticationProvider())
+            it.authenticationProvider(wechatAuthenticationProvider())
         }
     }
 

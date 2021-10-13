@@ -21,14 +21,8 @@ class SMSCodeTokenGranter(
 
     override fun getOAuth2Authentication(client: ClientDetails, tokenRequest: TokenRequest): OAuth2Authentication {
         val parameters: Map<String, String> = LinkedHashMap(tokenRequest.requestParameters)
-        val mobile = parameters["mobile"]
-        val code = parameters["code"]
-
-        if (mobile == null)
-            throw InvalidGrantException("mobile number is required")
-
-        if (code == null)
-            throw InvalidGrantException("mobile auth code is required")
+        val mobile = parameters["mobile"] ?: throw InvalidGrantException("mobile number is required")
+        val code = parameters["code"] ?: throw InvalidGrantException("mobile auth code is required")
 
         var userAuth: Authentication = SmsCodeAuthenticationToken(mobile, code)
         (userAuth as AbstractAuthenticationToken).details = parameters

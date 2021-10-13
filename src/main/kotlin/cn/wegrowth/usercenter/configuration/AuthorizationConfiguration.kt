@@ -1,12 +1,11 @@
 package cn.wegrowth.usercenter.configuration
 
 import cn.wegrowth.usercenter.auth.sms.SMSCodeTokenGranter
-import cn.wegrowth.usercenter.auth.sms.SmsCodeAuthenticationProvider
+import cn.wegrowth.usercenter.auth.wechat.WechatTokenGranter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer
@@ -53,21 +52,32 @@ class AuthorizationConfiguration(
             .userDetailsService(userDetailsService)
         // add grant type
         val tokeGranters = arrayListOf(endpoints.tokenGranter)
-        tokeGranters.add(
-            SMSCodeTokenGranter(
-                authenticationManager,
-                endpoints.tokenServices,
-                endpoints.clientDetailsService,
-                endpoints.oAuth2RequestFactory
-            )
-        )
+            .run {
+                add(
+                    SMSCodeTokenGranter(
+                        authenticationManager,
+                        endpoints.tokenServices,
+                        endpoints.clientDetailsService,
+                        endpoints.oAuth2RequestFactory
+                    )
+                )
+                add(
+                    WechatTokenGranter(
+                        authenticationManager,
+                        endpoints.tokenServices,
+                        endpoints.clientDetailsService,
+                        endpoints.oAuth2RequestFactory
+                    )
+                )
+                this
+            }
         endpoints.tokenGranter(CompositeTokenGranter(tokeGranters))
     }
 
     override fun configure(clients: ClientDetailsServiceConfigurer) {
         clients.inMemory()
             .withClient("self").secret(passwordEncoder.encode("self"))
-            .authorizedGrantTypes("password", "sms_code", "refresh_token")
+            .authorizedGrantTypes("password", "sms_code", "refresh_token","wechat")
             .and()
             .withClient("service").secret(passwordEncoder.encode("microservice"))
             .authorizedGrantTypes("client_credentials")
