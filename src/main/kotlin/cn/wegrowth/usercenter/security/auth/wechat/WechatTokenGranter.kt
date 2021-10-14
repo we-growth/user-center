@@ -1,4 +1,4 @@
-package cn.wegrowth.usercenter.auth.wechat
+package cn.wegrowth.usercenter.security.auth.wechat
 
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.core.Authentication

@@ -1,7 +1,8 @@
-package cn.wegrowth.usercenter.configuration
+package cn.wegrowth.usercenter.security.config
 
-import cn.wegrowth.usercenter.auth.sms.SmsCodeAuthenticationProvider
-import cn.wegrowth.usercenter.auth.wechat.WechatAuthenticationProvider
+import cn.wegrowth.usercenter.domain.service.JpaPlatformUserDetailManager
+import cn.wegrowth.usercenter.security.auth.sms.SmsCodeAuthenticationProvider
+import cn.wegrowth.usercenter.security.auth.wechat.WechatAuthenticationProvider
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -13,7 +14,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 
@@ -21,7 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-class SecurityConfig(private val userDetailsService: UserDetailsService) : WebSecurityConfigurerAdapter() {
+class SecurityConfig(private val userDetailsService: JpaPlatformUserDetailManager) : WebSecurityConfigurerAdapter() {
     @Value("\${springdoc.api-docs.path}")
     private lateinit var restApiDocPath: String
 

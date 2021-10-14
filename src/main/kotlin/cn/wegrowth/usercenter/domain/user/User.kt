@@ -15,8 +15,13 @@ class User(
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     val id: String? = null,
+
     private val username: String,
-    private val password: String,
+
+    private val password: String?,
+
+    private val wechatOpenId: String?,
+
     @Column(name = "create_date")
     private var createDate: OffsetDateTime? = null
 ) : UserDetails, Serializable {
@@ -25,7 +30,7 @@ class User(
         return mutableListOf<GrantedAuthority>(SimpleGrantedAuthority("ROLE_ADMIN"))
     }
 
-    override fun getPassword(): String {
+    override fun getPassword(): String? {
         return password
     }
 

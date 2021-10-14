@@ -1,7 +1,7 @@
-package cn.wegrowth.usercenter.configuration
+package cn.wegrowth.usercenter.security.config
 
-import cn.wegrowth.usercenter.auth.sms.SMSCodeTokenGranter
-import cn.wegrowth.usercenter.auth.wechat.WechatTokenGranter
+import cn.wegrowth.usercenter.security.auth.sms.SMSCodeTokenGranter
+import cn.wegrowth.usercenter.security.auth.wechat.WechatTokenGranter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisConnectionFactory
@@ -14,9 +14,10 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer
 import org.springframework.security.oauth2.provider.CompositeTokenGranter
-import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter
-import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter
+import org.springframework.security.oauth2.provider.token.TokenEnhancer
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain
 import org.springframework.security.oauth2.provider.token.TokenStore
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore
 
 
@@ -46,7 +47,24 @@ class AuthorizationConfiguration(
         }
     }
 
+    @Bean
+    fun jwtAccessTokenConverter(): JwtAccessTokenConverter {
+        val jwtAccessTokenConverter = JwtAccessTokenConverter()
+        jwtAccessTokenConverter.setSigningKey("cn.wegrowth")
+        return jwtAccessTokenConverter
+    }
+
+    @Bean
+    fun userTokenEnhance(): TokenEnhancer {
+        return UserTokenEnhancer()
+    }
+
     override fun configure(endpoints: AuthorizationServerEndpointsConfigurer) {
+        //add token enhancer
+        val tokenEnhancerChain = TokenEnhancerChain()
+        tokenEnhancerChain.setTokenEnhancers(arrayListOf(userTokenEnhance(), jwtAccessTokenConverter()))
+        endpoints.tokenEnhancer(tokenEnhancerChain)
+
         endpoints.tokenStore(tokenStore())
             .reuseRefreshTokens(true)
             .authenticationManager(authenticationManager)
@@ -74,18 +92,15 @@ class AuthorizationConfiguration(
                 this
             }
         endpoints.tokenGranter(CompositeTokenGranter(tokeGranters))
+
         // token convert
-        val converter = DefaultAccessTokenConverter()
-        val userAuthenticationConverter = DefaultUserAuthenticationConverter()
-        userAuthenticationConverter.setUserDetailsService(userDetailsService)
-        converter.setUserTokenConverter(userAuthenticationConverter)
-        endpoints.accessTokenConverter(converter)
+        endpoints.accessTokenConverter(jwtAccessTokenConverter())
     }
 
     override fun configure(clients: ClientDetailsServiceConfigurer) {
         clients.inMemory()
             .withClient("self").secret(passwordEncoder.encode("self"))
-            .authorizedGrantTypes("password", "sms_code", "refresh_token","wechat")
+            .authorizedGrantTypes("password", "sms_code", "refresh_token", "wechat")
             .and()
             .withClient("service").secret(passwordEncoder.encode("microservice"))
             .authorizedGrantTypes("client_credentials")

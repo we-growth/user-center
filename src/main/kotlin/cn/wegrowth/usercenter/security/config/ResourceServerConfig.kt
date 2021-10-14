@@ -1,4 +1,4 @@
-package cn.wegrowth.usercenter.configuration
+package cn.wegrowth.usercenter.security.config
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity

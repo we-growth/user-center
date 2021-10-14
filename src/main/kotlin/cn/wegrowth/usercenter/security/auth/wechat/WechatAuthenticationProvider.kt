@@ -1,17 +1,18 @@
-package cn.wegrowth.usercenter.auth.wechat
+package cn.wegrowth.usercenter.security.auth.wechat
 
+import cn.wegrowth.usercenter.domain.service.JpaPlatformUserDetailManager
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.core.Authentication
-import org.springframework.security.core.userdetails.UserDetailsService
 
 class WechatAuthenticationProvider(
-    private val userDetailsService: UserDetailsService) : AuthenticationProvider{
+    private val userDetailsService: JpaPlatformUserDetailManager
+) : AuthenticationProvider {
     override fun authenticate(authentication: Authentication?): Authentication {
         val authenticationToken: WechatAuthenticationToken = authentication as WechatAuthenticationToken
-        val userDetail = userDetailsService.loadUserByUsername(authenticationToken.principal)
+        val userDetail = userDetailsService.loadUserByWeChatId(authenticationToken.principal as String)
 
         val authenticationResult = WechatAuthenticationToken(
-            authenticationToken.principal,
+            userDetail,
             userDetail.authorities
         ).run {
             // now authenticated is true
@@ -22,7 +23,7 @@ class WechatAuthenticationProvider(
         return authenticationResult
     }
 
-    override fun supports(authentication: Class<*>?): Boolean {
+    override fun supports(authentication: Class<*>): Boolean {
         return WechatAuthenticationToken::class.java.isAssignableFrom(authentication)
     }
 }

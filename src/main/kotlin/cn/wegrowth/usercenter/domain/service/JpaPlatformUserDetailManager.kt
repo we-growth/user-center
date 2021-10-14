@@ -16,6 +16,12 @@ class JpaPlatformUserDetailManager(private val userRepository: UserRepository) :
         TODO("Not yet implemented")
     }
 
+    override fun loadUserByWeChatId(wechatOpenId: String): UserDetails {
+        return userRepository.findOne(
+            QUser.user.wechatOpenId.eq(wechatOpenId)
+        ).orElseThrow { UsernameNotFoundException("User not Found") }
+    }
+
 
     override fun loadUserByUsername(username: String?): UserDetails {
         return userRepository.findOne(

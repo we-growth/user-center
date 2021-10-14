@@ -1,4 +1,4 @@
-package cn.wegrowth.usercenter.auth.sms
+package cn.wegrowth.usercenter.security.auth.sms
 
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.core.Authentication
@@ -11,10 +11,10 @@ class SmsCodeAuthenticationProvider(
 
     override fun authenticate(authentication: Authentication): Authentication {
         val authenticationToken: SmsCodeAuthenticationToken = authentication as SmsCodeAuthenticationToken
-        val userDetail = userDetailsService.loadUserByUsername(authenticationToken.principal)
+        val userDetail = userDetailsService.loadUserByUsername(authenticationToken.principal.toString())
 
         val authenticationResult = SmsCodeAuthenticationToken(
-            authenticationToken.principal, authenticationToken.credentials,
+            userDetail, "[N/A]",
             userDetail.authorities
         ).run {
             // now authenticated is true

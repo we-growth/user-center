@@ -1,4 +1,4 @@
-package cn.wegrowth.usercenter.auth.sms
+package cn.wegrowth.usercenter.security.auth.sms
 
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.authentication.AccountStatusException

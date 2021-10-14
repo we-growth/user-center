@@ -1,4 +1,4 @@
-package cn.wegrowth.usercenter.auth.sms
+package cn.wegrowth.usercenter.security.auth.sms
 
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
@@ -8,7 +8,7 @@ class SmsCodeAuthenticationToken : AbstractAuthenticationToken {
     private var credentials: Any? = null
 
     constructor(
-        principal: Any?,
+        principal: Any,
         credentials: Any?,
         authorities: Collection<GrantedAuthority>?
     ) : super(authorities) {
@@ -16,7 +16,7 @@ class SmsCodeAuthenticationToken : AbstractAuthenticationToken {
         this.credentials = credentials
     }
 
-    constructor(principal: String, credentials: String) : super(null) {
+    constructor(principal: Any, credentials: Any?) : super(null) {
         this.principal = principal
         this.credentials = credentials
     }
@@ -25,7 +25,7 @@ class SmsCodeAuthenticationToken : AbstractAuthenticationToken {
         return this.credentials
     }
 
-    override fun getPrincipal(): String {
-        return this.credentials!!.toString()
+    override fun getPrincipal(): Any? {
+        return this.principal
     }
 }

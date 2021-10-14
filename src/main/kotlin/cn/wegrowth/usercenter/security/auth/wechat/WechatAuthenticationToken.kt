@@ -1,30 +1,30 @@
-package cn.wegrowth.usercenter.auth.wechat
+package cn.wegrowth.usercenter.security.auth.wechat
 
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
 
 class WechatAuthenticationToken
     : AbstractAuthenticationToken {
-    private  var principal: Any? = null
+    private var principal: Any
 
     constructor(
-        principal: Any?,
+        principal: Any,
         authorities: Collection<GrantedAuthority>?
     ) : super(authorities) {
         this.principal = principal
     }
 
-    constructor(principal: String) : super(null) {
+    constructor(principal: Any) : super(null) {
         this.principal = principal
     }
 
-    override fun getCredentials(): Any? {
-        //TODO("Not yet implemented")
-        return null
+    override fun getCredentials(): Any {
+        return "[N/A]"
     }
 
-    override fun getPrincipal(): String {
-        return this.principal!!.toString()
+    override fun getPrincipal(): Any {
+        return this.principal
     }
+
 
 }
