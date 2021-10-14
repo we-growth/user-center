@@ -14,6 +14,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer
 import org.springframework.security.oauth2.provider.CompositeTokenGranter
+import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter
+import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter
 import org.springframework.security.oauth2.provider.token.TokenStore
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore
 
@@ -72,6 +74,12 @@ class AuthorizationConfiguration(
                 this
             }
         endpoints.tokenGranter(CompositeTokenGranter(tokeGranters))
+        // token convert
+        val converter = DefaultAccessTokenConverter()
+        val userAuthenticationConverter = DefaultUserAuthenticationConverter()
+        userAuthenticationConverter.setUserDetailsService(userDetailsService)
+        converter.setUserTokenConverter(userAuthenticationConverter)
+        endpoints.accessTokenConverter(converter)
     }
 
     override fun configure(clients: ClientDetailsServiceConfigurer) {
