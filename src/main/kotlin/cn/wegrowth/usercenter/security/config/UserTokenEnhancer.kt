@@ -8,11 +8,12 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancer
 
 class UserTokenEnhancer : TokenEnhancer {
     override fun enhance(accessToken: OAuth2AccessToken, authentication: OAuth2Authentication): OAuth2AccessToken {
-        val user = authentication.principal as User
-
-        if (accessToken is DefaultOAuth2AccessToken) {
-            val additionalInfo = hashMapOf<String, Any?>("user_id" to user.id)
-            accessToken.additionalInformation = additionalInfo
+        val principal = authentication.principal
+        if (principal is User) {
+            if (accessToken is DefaultOAuth2AccessToken) {
+                val additionalInfo = hashMapOf<String, Any?>("user_id" to principal.id)
+                accessToken.additionalInformation = additionalInfo
+            }
         }
         return accessToken
     }

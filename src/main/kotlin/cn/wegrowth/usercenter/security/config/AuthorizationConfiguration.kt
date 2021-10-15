@@ -103,6 +103,7 @@ class AuthorizationConfiguration(
             .authorizedGrantTypes("password", "sms_code", "refresh_token", "wechat")
             .and()
             .withClient("service").secret(passwordEncoder.encode("microservice"))
+            .scopes("scope_system")
             .authorizedGrantTypes("client_credentials")
     }
 }
