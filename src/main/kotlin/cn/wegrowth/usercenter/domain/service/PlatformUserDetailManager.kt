@@ -1,15 +1,21 @@
 package cn.wegrowth.usercenter.domain.service
 
+import cn.wegrowth.usercenter.api.CreateUserRequest
+import cn.wegrowth.usercenter.domain.dto.UserView
 import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.provisioning.UserDetailsManager
 
-interface PlatformUserDetailManager : UserDetailsManager {
+interface PlatformUserDetailManager : UserDetailsService {
     /**
      * Create user details
      */
-    fun createUserDetails(username: String, password: String, authorities: Array<String>): UserDetails
+    fun createUser(createUserRequest: CreateUserRequest): UserView?
 
+    /**
+     *微信openid
+     */
     @Throws(UsernameNotFoundException::class)
     fun loadUserByWeChatId(username: String): UserDetails
 }

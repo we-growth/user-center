@@ -14,22 +14,22 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
-import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-class SecurityConfig(private val userDetailsService: JpaPlatformUserDetailManager) : WebSecurityConfigurerAdapter() {
+class SecurityConfig(
+    private val userDetailsService: JpaPlatformUserDetailManager,
+    private val passwordEncoder: PasswordEncoder
+) : WebSecurityConfigurerAdapter() {
     @Value("\${springdoc.api-docs.path}")
     private lateinit var restApiDocPath: String
 
     @Value("\${springdoc.swagger-ui.path}")
     private lateinit var swaggerPath: String
 
-    @Bean
-    fun passwordEncoder(): PasswordEncoder = Argon2PasswordEncoder()
 
     @Bean
     override fun authenticationManager(): AuthenticationManager {
@@ -41,6 +41,7 @@ class SecurityConfig(private val userDetailsService: JpaPlatformUserDetailManage
             .antMatchers("%s/**".format(restApiDocPath))
             .antMatchers("%s/**".format(swaggerPath))
             .antMatchers("%s/**".format("/actuator"))
+            .antMatchers("/api/public/**")
     }
 
     override fun configure(http: HttpSecurity) {
@@ -55,7 +56,7 @@ class SecurityConfig(private val userDetailsService: JpaPlatformUserDetailManage
     fun daoAuthenticationProvider(): DaoAuthenticationProvider {
         return DaoAuthenticationProvider().run {
             setUserDetailsService(userDetailsService)
-            setPasswordEncoder(passwordEncoder())
+            setPasswordEncoder(passwordEncoder)
             this
         }
     }

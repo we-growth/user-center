@@ -6,7 +6,7 @@ spring:
       host: @consul.host@
       port: @consul.port@
       discovery:
-        service-name: user-center
+        service-name: uaa
         # 启用服务发现
         enabled: true
         # 启用服务注册

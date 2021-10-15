@@ -10,7 +10,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "users")
-class User(
+data class User(
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
@@ -18,13 +18,23 @@ class User(
 
     private val username: String,
 
-    private val password: String?,
+    private var password: String?,
 
-    private val wechatOpenId: String?,
+    private var wechatOpenId: String?,
 
     @Column(name = "create_date")
     private var createDate: OffsetDateTime? = null
-) : UserDetails, Serializable {
+) : UserDetails {
+
+    companion object {
+        private const val serialVersionUID: Long = 6835345546157347379
+    }
+
+//    private val serialVersionUID = 6835345546157347379L
+
+    fun withEnconderPassword(secrets : String) {
+        this.password = secrets
+    }
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         return mutableListOf<GrantedAuthority>(SimpleGrantedAuthority("ROLE_ADMIN"))
