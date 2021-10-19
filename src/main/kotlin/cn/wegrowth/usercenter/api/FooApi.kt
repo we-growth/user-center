@@ -22,9 +22,10 @@ class FooApi {
     fun getUserFoo(hello: String): String {
         return hello + " at " + DateTime.now()
     }
+
     @GetMapping("me")
     @PreAuthorize("hasRole('ADMIN')")
-    fun getMe() : Any? {
+    fun getMe(): Any? {
         val principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal()
         return principal
     }

@@ -8,7 +8,9 @@ import org.mapstruct.Mapping
 
 @Mapper(componentModel = "spring")
 interface UserConverter {
+    @Mapping(target = "access", ignore = true)
     fun asView(person: User): UserView
-    @Mapping(target = "password",ignore = true)
+
+    @Mapping(target = "password", ignore = true)
     fun from(createUserRequest: CreateUserRequest): User
 }

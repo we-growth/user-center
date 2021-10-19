@@ -4,7 +4,6 @@ import org.hibernate.annotations.GenericGenerator
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
-import java.io.Serializable
 import java.time.OffsetDateTime
 import javax.persistence.*
 
@@ -32,7 +31,7 @@ data class User(
 
 //    private val serialVersionUID = 6835345546157347379L
 
-    fun withEnconderPassword(secrets : String) {
+    fun withEnconderPassword(secrets: String) {
         this.password = secrets
     }
 

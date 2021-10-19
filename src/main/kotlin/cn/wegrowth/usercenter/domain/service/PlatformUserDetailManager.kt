@@ -5,7 +5,6 @@ import cn.wegrowth.usercenter.domain.dto.UserView
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
-import org.springframework.security.provisioning.UserDetailsManager
 
 interface PlatformUserDetailManager : UserDetailsService {
     /**
